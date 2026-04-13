@@ -1,0 +1,19 @@
+stages:
+  - build
+
+build_backend:
+  stage: build
+  image: docker:24.0.5-cli
+  services:
+    - name: docker:24.0.5-dind
+      command: ["--mtu=1400"]
+  variables:
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_TLS_CERTDIR: ""
+    IMAGE_TAG: $CI_REGISTRY_IMAGE/backend:ci-test
+  tags:
+    - saas-linux-small-amd64
+  script:
+    - echo "$CI_REGISTRY_PASSWORD" | docker login "$CI_REGISTRY" -u "$CI_REGISTRY_USER" --password-stdin
+    - docker build --pull -t "$IMAGE_TAG" .
+    - docker push "$IMAGE_TAG"

@@ -1,0 +1,41 @@
+services:
+
+  db:
+    image: mysql:8.0
+    restart: always
+    env_file:
+      - .env
+    environment:
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}             # MySQL이 시작될 때 이 유저를 생성
+      MYSQL_PASSWORD: ${DB_PASSWORD}     # 생성된 유저의 비밀번호 설정
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+
+    healthcheck: # DB가 정말로 준비되었는지 확인하는 로직
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+    volumes:
+      - db_data:/var/lib/mysql # 컨테이너가 삭제되어도 데이터가 유지되도록 볼륨 설정
+
+  backend:
+    image: registry.gitlab.com/sku-sw-academy-group/community-backend/backend:ci-test
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    environment:
+      # .env 파일에 정의된 변수를 Spring의 DB 연결 설정에 매핑
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/${DB_NAME}
+      SPRING_DATASOURCE_USERNAME: ${DB_USER}       # Spring에 유저명 전달
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}   # Spring에 비밀번호 전달
+
+    depends_on:
+      db:
+        condition: service_healthy # db가 'healthy' 상태가 될 때까지 기다림
+
+
+volumes:
+  db_data:
