@@ -11,12 +11,12 @@ services:
       MYSQL_PASSWORD: ${DB_PASSWORD}     # 생성된 유저의 비밀번호 설정
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
 
-    healthcheck: # DB컨테이너가 실행되고 준비된걸 확인하는 옵션
+    healthcheck: # DB가 정말로 준비되었는지 확인하는 로직
       test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD}" ]
       interval: 5s
       timeout: 5s
       retries: 10
-      start_period: 30s # 💡 컨테이너 시작 후 30초 동안은 헬스체크 실패해도 통과
+      start_period: 30s
 
     volumes:
       - db_data:/var/lib/mysql # 컨테이너가 삭제되어도 데이터가 유지되도록 볼륨 설정
@@ -25,14 +25,13 @@ services:
     image: registry.gitlab.com/sku-sw-academy-group/community-backend/backend:main
 #    build:
 #      context: ./community-backend
-    # DB가 준비안되면 함더 시작.
+
     restart: on-failure
 
     ports:
       - "8080:8080"
     env_file:
       - .env
-
     environment:
       #.env 파일에 정의된 변수를 Spring의 DB 연결 설정에 매핑
       # 환경변수로 spring_datasource_* 이런식으로 입력되면 스프링이 알아서 속성파일에 적용할 수 있는 속성으로 변환.
@@ -46,9 +45,9 @@ services:
 
 
   frontend:
+    image: registry.gitlab.com/sku-sw-academy-group/community-frontend/frontend:main
 #    build:
 #      context: ./community-frontend
-    image: registry.gitlab.com/sku-sw-academy-group/community-frontend/frontend:main
     ports:
       - "3000:80"
     depends_on:
