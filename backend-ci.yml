@@ -1,5 +1,6 @@
 stages:
   - build
+  - deploy
 
 build_backend:
   stage: build
@@ -17,3 +18,15 @@ build_backend:
     - echo "$CI_REGISTRY_PASSWORD" | docker login "$CI_REGISTRY" -u "$CI_REGISTRY_USER" --password-stdin
     - docker build --pull -t "$IMAGE_TAG" .
     - docker push "$IMAGE_TAG"
+
+deploy_compose:
+  stage: deploy
+  tags:
+    - test-server
+  script:
+    - cd /mnt/c/DH_cloud_backend/SW-project/SW-project-deploy
+    - git pull origin main
+    - docker compose pull
+    - docker compose up -d
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
