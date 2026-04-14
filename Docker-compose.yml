@@ -16,14 +16,17 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
+      start_period: 30s
 
     volumes:
       - db_data:/var/lib/mysql # 컨테이너가 삭제되어도 데이터가 유지되도록 볼륨 설정
 
   backend:
-    image: registry.gitlab.com/sku-sw-academy-group/community-backend/backend:soc
+    image: registry.gitlab.com/sku-sw-academy-group/community-backend/backend:main
 #    build:
 #      context: ./community-backend
+
+    restart: on-failure
     ports:
       - "8080:8080"
     env_file:
@@ -41,7 +44,7 @@ services:
 
 
   frontend:
-    image: registry.gitlab.com/sku-sw-academy-group/community-frontend/frontend:soc
+    image: registry.gitlab.com/sku-sw-academy-group/community-frontend/frontend:main
 #    build:
 #      context: ./community-frontend
     ports:
