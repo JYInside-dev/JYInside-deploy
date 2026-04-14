@@ -10,7 +10,7 @@ build_backend:
   variables:
     DOCKER_HOST: tcp://docker:2375
     DOCKER_TLS_CERTDIR: ""
-    IMAGE_TAG: $CI_REGISTRY_IMAGE/backend:ci-test
+    IMAGE_TAG: $CI_REGISTRY_IMAGE/backend:$CI_COMMIT_REF_SLUG
   tags:
     - saas-linux-small-amd64
   script:
