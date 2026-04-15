@@ -1,0 +1,12 @@
+deploy_compose:
+  stage: deploy
+  tags:
+    - test-server
+  script:
+    - cd /mnt/c/DH_cloud_backend/SW-project/SW-project-deploy
+    - git pull "https://${DEPLOY_REPO_USER}:${DEPLOY_REPO_TOKEN}@gitlab.com/Sku-sw-academy-group/community-deploy.git" cd-test
+    - echo "$REGISTRY_PASSWORD" | docker login registry.gitlab.com -u "$REGISTRY_USER" --password-stdin
+    - docker compose pull
+    - docker compose up -d
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "cd-test"'
