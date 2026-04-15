@@ -22,7 +22,7 @@ services:
       - db_data:/var/lib/mysql # 컨테이너가 삭제되어도 데이터가 유지되도록 볼륨 설정
 
   backend:
-    image: registry.gitlab.com/sku-sw-academy-group/community-backend/backend:main
+    image: registry.gitlab.com/sku-sw-academy-group/community-backend/backend:cd-test
 #    build:
 #      context: ./community-backend
 
@@ -45,7 +45,7 @@ services:
 
 
   frontend:
-    image: registry.gitlab.com/sku-sw-academy-group/community-frontend/frontend:main
+    image: registry.gitlab.com/sku-sw-academy-group/community-frontend/frontend:cd-test
 #    build:
 #      context: ./community-frontend
     ports:
