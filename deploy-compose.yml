@@ -3,9 +3,9 @@ deploy_compose:
   tags:
     - test-server
   script:
-    - echo "$REGISTRY_PASSWORD" | docker login registry.gitlab.com -u "$REGISTRY_USER" --password-stdin
     - cd /mnt/c/DH_cloud_backend/SW-project/SW-project-deploy
-    - git pull origin cd-test
+    - GIT_SSH_COMMAND="ssh -i /home/gitlab-runner/.ssh/deploy_key -o StrictHostKeyChecking=no" git pull origin cd-test
+    - echo "$REGISTRY_PASSWORD" | docker login registry.gitlab.com -u "$REGISTRY_USER" --password-stdin
     - docker compose pull
     - docker compose up -d
   rules:
