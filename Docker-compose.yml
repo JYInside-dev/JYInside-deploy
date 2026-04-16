@@ -94,9 +94,9 @@ services:
 #====================================================================================
 
   backend-green:
-#    image: registry.gitlab.com/sku-sw-academy-group/community-backend/backend:main
-    build:
-      context: ./community-backend
+    image: registry.gitlab.com/sku-sw-academy-group/community-backend/backend:main
+#    build:
+#      context: ./community-backend
 
 
     # 존재하지 않는 프로필 만들어서 무한대기
@@ -118,9 +118,9 @@ services:
 
 
   frontend-green:
-#    image: registry.gitlab.com/sku-sw-academy-group/community-frontend/frontend:main
-    build:
-      context: ./community-frontend
+    image: registry.gitlab.com/sku-sw-academy-group/community-frontend/frontend:main
+#    build:
+#      context: ./community-frontend
     profiles: ["standBy"] # 배포 스크립트 실행 전까지 가동 대기
     depends_on:
       - backend-green
