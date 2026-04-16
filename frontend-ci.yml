@@ -1,5 +1,9 @@
+include:
+  - local: '/deploy-compose.yml'
+
 stages:
   - build
+  - deploy
 
 build_frontend:
   stage: build
