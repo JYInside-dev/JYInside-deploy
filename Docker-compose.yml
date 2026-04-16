@@ -1,5 +1,6 @@
 services:
 
+  # 데이터베이스 이미지
   db:
     image: mysql:8.0
     restart: always
@@ -21,15 +22,38 @@ services:
     volumes:
       - db_data:/var/lib/mysql # 컨테이너가 삭제되어도 데이터가 유지되도록 볼륨 설정
 
-  backend:
+
+  # 무중단 배포를 위한 로드밸런서로 nginx 사용.
+  nginx:
+    image: nginx:stable-alpine
+
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+
+    # 초기 서버는 있어야 함.
+    depends_on:
+      - backend-blue
+      - frontend-blue
+
+
+
+#====================================================================================
+  # blue 서버
+#====================================================================================
+
+  backend-blue:
     image: registry.gitlab.com/sku-sw-academy-group/community-backend/backend:main
 #    build:
 #      context: ./community-backend
 
     restart: on-failure
 
-    ports:
-      - "8080:8080"
+    # nginx로 포트 관리할거라 컨테이너에서 포트포워딩은 막음.
+#    ports:
+#      - "8080:8080"
+
     env_file:
       - .env
     environment:
@@ -44,14 +68,53 @@ services:
         condition: service_healthy # db가 'healthy' 상태가 될 때까지 기다림
 
 
-  frontend:
+  frontend-blue:
     image: registry.gitlab.com/sku-sw-academy-group/community-frontend/frontend:main
 #    build:
 #      context: ./community-frontend
-    ports:
-      - "3000:80"
+#    ports:
+#      - "3000:80"
     depends_on:
-      - backend
+      - backend-blue
+
+
+#====================================================================================
+  # green 서버
+#====================================================================================
+
+  backend-green:
+#    image: registry.gitlab.com/sku-sw-academy-group/community-backend/backend:main
+    build:
+      context: ./community-backend
+
+
+    # 존재하지 않는 프로필 만들어서 무한대기
+    profiles: ["standBy"] # 배포 스크립트 실행 전까지 가동 대기
+    restart: on-failure
+
+    env_file:
+      - .env
+    environment:
+      #.env 파일에 정의된 변수를 Spring의 DB 연결 설정에 매핑
+      # 환경변수로 spring_datasource_* 이런식으로 입력되면 스프링이 알아서 속성파일에 적용할 수 있는 속성으로 변환.
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/${DB_NAME}
+      SPRING_DATASOURCE_USERNAME: ${DB_USER}       # Spring에 유저명 전달
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}   # Spring에 비밀번호 전달
+
+    depends_on:
+      db:
+        condition: service_healthy
+
+
+  frontend-green:
+#    image: registry.gitlab.com/sku-sw-academy-group/community-frontend/frontend:main
+    build:
+      context: ./community-frontend
+    profiles: ["standBy"] # 배포 스크립트 실행 전까지 가동 대기
+    depends_on:
+      - backend-green
+
+
 
 
 volumes:
