@@ -14,8 +14,8 @@ prepare_context:
     - echo "BACKEND_REF=${BACKEND_REF_OVERRIDE:-$CI_COMMIT_REF_SLUG}" >> deploy.env
     - echo "FRONTEND_REF=${FRONTEND_REF_OVERRIDE:-$CI_COMMIT_REF_SLUG}" >> deploy.env
     # BACKEND_IMAGE, FRONTEND_IMAGE : compose가 실제로 가져올 이미지 주소
-    - echo "BACKEND_IMAGE=repository.gitlab.com/Sku-sw-academy-group/Community-backend/backend:${BACKEND_REF_OVERRIDE:-$CI_COMMIT_REF_SLUG}" >> deploy.env
-    - echo "FRONTEND_IMAGE=repository.gitlab.com/Sku-sw-academy-group/Community-frontend/frontend:${FRONTEND_REF_OVERRIDE:-$CI_COMMIT_REF_SLUG}" >> deploy.env
+    - echo "BACKEND_IMAGE=registry.gitlab.com/sku-sw-academy-group/community-backend/backend:${BACKEND_REF_OVERRIDE:-$CI_COMMIT_REF_SLUG}" >> deploy.env
+    - echo "FRONTEND_IMAGE=registry.gitlab.com/sku-sw-academy-group/community-frontend/frontend:${FRONTEND_REF_OVERRIDE:-$CI_COMMIT_REF_SLUG}" >> deploy.env
   artifacts:
     reports:
       dotenv: deploy.env

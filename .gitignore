@@ -2,3 +2,4 @@ community-backend
 community-frontend
 .idea
 .env
+.env.runtime
