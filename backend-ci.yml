@@ -1,10 +1,6 @@
 include:
   - local: '/deploy-compose.yml'
 
-stages:
-  - build
-  - deploy
-
 build_backend:
   stage: build
   image: docker:24.0.5-cli

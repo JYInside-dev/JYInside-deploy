@@ -55,7 +55,7 @@ services:
 #====================================================================================
 
   backend-blue:
-    image: registry.gitlab.com/sku-sw-academy-group/community-backend/backend:main
+    image: ${BACKEND_IMAGE}
 #    build:
 #      context: ./community-backend
 
@@ -80,7 +80,7 @@ services:
 
 
   frontend-blue:
-    image: registry.gitlab.com/sku-sw-academy-group/community-frontend/frontend:main
+    image: ${FRONTEND_IMAGE}
 #    build:
 #      context: ./community-frontend
 #    ports:
@@ -94,7 +94,7 @@ services:
 #====================================================================================
 
   backend-green:
-    image: registry.gitlab.com/sku-sw-academy-group/community-backend/backend:main
+    image: ${BACKEND_IMAGE}
 #    build:
 #      context: ./community-backend
 
@@ -118,7 +118,7 @@ services:
 
 
   frontend-green:
-    image: registry.gitlab.com/sku-sw-academy-group/community-frontend/frontend:main
+    image: ${FRONTEND_IMAGE}
 #    build:
 #      context: ./community-frontend
     profiles: ["standBy"] # 배포 스크립트 실행 전까지 가동 대기
