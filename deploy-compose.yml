@@ -26,7 +26,7 @@ prepare_context:
   script:
     - BACKEND_REF_VALUE="${BACKEND_REF:-$CI_COMMIT_REF_SLUG}"
     - FRONTEND_REF_VALUE="${FRONTEND_REF:-$CI_COMMIT_REF_SLUG}"
-    - echo "DEPLOY_REF="${DEPLY_REF:-main}" >> deploy.env
+    - echo "DEPLOY_REF=${DEPLY_REF:-main}" >> deploy.env
     - echo "BACKEND_REF=$BACKEND_REF_VALUE" >> deploy.env
     - echo "FRONTEND_REF=$FRONTEND_REF_VALUE" >> deploy.env
     # BACKEND_IMAGE, FRONTEND_IMAGE : compose가 실제로 가져올 이미지 주소
