@@ -78,6 +78,9 @@ services:
       db:
         condition: service_healthy # db가 'healthy' 상태가 될 때까지 기다림
 
+    volumes:
+      - ./scripts:/app/scripts
+
 
   frontend-blue:
     image: ${FRONTEND_IMAGE}
@@ -115,6 +118,9 @@ services:
     depends_on:
       db:
         condition: service_healthy
+
+    volumes:
+      - ./scripts:/app/scripts
 
 
   frontend-green:
