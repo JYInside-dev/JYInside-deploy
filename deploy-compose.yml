@@ -32,6 +32,9 @@ prepare_context:
     # BACKEND_IMAGE, FRONTEND_IMAGE : compose가 실제로 가져올 이미지 주소
     - echo "BACKEND_IMAGE=registry.gitlab.com/sku-sw-academy-group/community-backend/backend:$BACKEND_REF_VALUE" >> deploy.env
     - echo "FRONTEND_IMAGE=registry.gitlab.com/sku-sw-academy-group/community-frontend/frontend:$FRONTEND_REF_VALUE" >> deploy.env
+    - #     불러올 이미지 변수 저장
+    - sed -i "s|^BACKEND_IMAGE=.*|BACKEND_IMAGE=$BACKED_IMAGE|" .env
+    - sed -i "s|^FRONTEND_IMAGE=.*|FRONTEND_IMAGE=$FRONTED_IMAGE|" .env
   artifacts:
     reports:
       dotenv: deploy.env
@@ -43,11 +46,8 @@ deploy_compose:
   script:
     - cd /mnt/c/DH_cloud_backend/SW-project/SW-project-deploy
     - git pull "https://${DEPLOY_REPO_USER}:${DEPLOY_REPO_TOKEN}@gitlab.com/Sku-sw-academy-group/community-deploy.git" "${DEPLOY_REF:-main}"
-    #     불러올 이미지 변수 저장
-    - sed -i "s|^BACKEND_IMAGE=.*|BACKEND_IMAGE=$BACKED_IMAGE|" .env
-    - sed -i "s|^FRONTEND_IMAGE=.*|FRONTEND_IMAGE=$FRONTED_IMAGE|" .env
     - echo "$REGISTRY_PASSWORD" | docker login registry.gitlab.com -u "$REGISTRY_USER" --password-stdin
-    - docker compose --env-file .env.runtime pull
-    - docker compose --env-file .env.runtime up -d
+    - docker compose --env-file .env pull
+    - docker compose --env-file .env up -d
   rules:
     - if: '$CI_COMMIT_BRANCH'
