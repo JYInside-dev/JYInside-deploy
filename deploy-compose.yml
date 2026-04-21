@@ -37,7 +37,9 @@ prepare_context:
     - sed -i "s|^FRONTEND_IMAGE=.*|FRONTEND_IMAGE=$FRONTED_IMAGE|" .env
   artifacts:
     reports:
-      dotenv: deploy.env
+      dotenv:
+        - deploy.env
+        - .env
 
 deploy_compose:
   stage: deploy
