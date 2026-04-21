@@ -32,7 +32,7 @@ prepare_context:
     # BACKEND_IMAGE, FRONTEND_IMAGE : compose가 실제로 가져올 이미지 주소
     - echo "BACKEND_IMAGE=registry.gitlab.com/sku-sw-academy-group/community-backend/backend:$BACKEND_REF_VALUE" >> deploy.env
     - echo "FRONTEND_IMAGE=registry.gitlab.com/sku-sw-academy-group/community-frontend/frontend:$FRONTEND_REF_VALUE" >> deploy.env
-    - #     불러올 이미지 변수 저장
+    # 불러올 이미지 변수 저장
     - sed -i "s|^BACKEND_IMAGE=.*|BACKEND_IMAGE=$BACKED_IMAGE|" .env
     - sed -i "s|^FRONTEND_IMAGE=.*|FRONTEND_IMAGE=$FRONTED_IMAGE|" .env
   artifacts:
