@@ -26,7 +26,7 @@ prepare_context:
   script:
     - BACKEND_REF_VALUE="${BACKEND_REF:-$CI_COMMIT_REF_SLUG}"
     - FRONTEND_REF_VALUE="${FRONTEND_REF:-$CI_COMMIT_REF_SLUG}"
-    - echo "DEPLOY_REF=${DEPLY_REF:-main}" >> deploy.env
+    - echo "DEPLOY_REF=${DEPLY_REF:-main}" > deploy.env
     - echo "BACKEND_REF=$BACKEND_REF_VALUE" >> deploy.env
     - echo "FRONTEND_REF=$FRONTEND_REF_VALUE" >> deploy.env
     # BACKEND_IMAGE, FRONTEND_IMAGE : compose가 실제로 가져올 이미지 주소
@@ -44,8 +44,13 @@ deploy_compose:
     - cd /mnt/c/DH_cloud_backend/SW-project/SW-project-deploy
     - git pull "https://${DEPLOY_REPO_USER}:${DEPLOY_REPO_TOKEN}@gitlab.com/Sku-sw-academy-group/community-deploy.git" "${DEPLOY_REF:-main}"
     - echo "$REGISTRY_PASSWORD" | docker login registry.gitlab.com -u "$REGISTRY_USER" --password-stdin
-    - echo "BACKEND_IMAGE=${BACKEND_IMAGE}" >> .env.runtime
+    - echo "BACKEND_IMAGE=${BACKEND_IMAGE}" > .env.runtime
     - echo "FRONTEND_IMAGE=${FRONTEND_IMAGE}" >> .env.runtime
+    - echo "DB_NAME=$DB_NAME" >> .env.runtime
+    - echo "DB_USER=$DB_USER" >> .env.runtime
+    - echo "DB_PASSWORD=$DB_PASSWORD" >> .env.runtime
+    - echo "DB_ROOT_PASSWORD=$DB_ROOT_PASSWORD" >> .env.runtime
+    - echo "DB_URL=jdbc:mysql://db:3306/$DB_NAME" >> .env.runtime
     - docker compose --env-file .env.runtime pull
     - docker compose --env-file .env.runtime up -d
   rules:
