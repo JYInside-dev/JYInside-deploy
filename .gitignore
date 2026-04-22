@@ -3,3 +3,4 @@ community-frontend
 .idea
 .env
 .env.runtime
+ops/*
