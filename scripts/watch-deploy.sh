@@ -22,6 +22,10 @@ while true; do
     # 요청 파일 삭제 (안지우면 배포 무한 반복 실행할 수도 있음)
     rm -f "$REQUEST_FILE"
 
+    # 배포 스크립트 실행 여부 기록
+    echo "$(date '+%F %T') changing directory to $BASE_DIR" >> "$LOG_FILE"
+    cd "$BASE_DIR"
+
     # 실제 배포 스크립트 실행 (성공, 실패 로그 전부 기록)
     if bash "$DEPLOY_SCRIPT" >> "$LOG_FILE" 2>&1; then
       echo "$(date '+%F %T') deploy success" >> "$LOG_FILE"
