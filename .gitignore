@@ -4,3 +4,4 @@ community-frontend
 .env
 .env.runtime
 ops/*
+logs

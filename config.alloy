@@ -1,0 +1,23 @@
+
+// 1. alloy컨테이너에서 로그 파일 경로 찾아서 수집
+local.file_match "community_server_logs" {
+  // 도커 볼륨으로 마운트된 경로에서 .log 파일 탐색
+  path_targets = [{"__path__" = "/var/log/*.log"}]
+}
+
+
+// 2. loki가 수집된 로그 저장
+loki.source.file "community_app"{
+  // 위에서 찾은 로그를 주입
+  targets = local.file_match.community_server_logs.targets
+  // 읽은 로그를 loki.write로 전달해서 DB저장
+  forward_to = [loki.write.local_loki.receiver]
+}
+
+// 3. Loki로 데이터 전송 (Destination)
+loki.write "local_loki" {
+  endpoint {
+    // 도커 네트워크 내부 통신이므로 컨테이너명(loki) 사용s
+    url = "http://loki:3100/loki/api/v1/push"
+  }
+}
