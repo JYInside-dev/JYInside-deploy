@@ -32,7 +32,6 @@ services:
 
 
   # 무중단 배포를 위한 로드밸런서로 nginx 사용.
-  # TODO: 백엔드 프론트엔드서버가 없어도 죽지 않도록 추가적으로 conf파일 수정해야함
   nginx:
     image: nginx:stable-alpine
     ports:
