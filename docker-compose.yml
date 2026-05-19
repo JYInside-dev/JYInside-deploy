@@ -16,6 +16,8 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/${DB_NAME}
       SPRING_DATASOURCE_USERNAME: ${DB_USER}       # Spring에 유저명 전달
       SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}   # Spring에 비밀번호 전달
+      SPRING_PROFILES_ACTIVE: prod # 도커로 실행할 때에는 로그파일 작성
+
 
     volumes:
       - ./ops:/app/ops
@@ -49,6 +51,8 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/${DB_NAME}
       SPRING_DATASOURCE_USERNAME: ${DB_USER}       # Spring에 유저명 전달
       SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}   # Spring에 비밀번호 전달
+      SPRING_PROFILES_ACTIVE: prod # 도커로 실행할 때에는 로그파일 작성
+
 
     volumes:
       - ./ops:/app/ops
