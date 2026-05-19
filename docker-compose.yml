@@ -1,6 +1,3 @@
-
-# 이 컴포즈 실행하기 전에 인프라 컴포즈랑 통신할 Network를 먼저 만들어야함
-
 services:
 
 #====================================================================================
@@ -9,14 +6,7 @@ services:
 
   backend-blue:
     image: ${BACKEND_IMAGE}
-#    build:
-#      context: ./community-backend
-
     restart: on-failure
-
-    # nginx로 포트 관리할거라 컨테이너에서 포트포워딩은 막음.
-#    ports:
-#      - "8080:8080"
 
     env_file:
       - .env
@@ -27,22 +17,18 @@ services:
       SPRING_DATASOURCE_USERNAME: ${DB_USER}       # Spring에 유저명 전달
       SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}   # Spring에 비밀번호 전달
 
-    depends_on:
-      db:
-        condition: service_healthy # db가 'healthy' 상태가 될 때까지 기다림
-
     volumes:
       - ./ops:/app/ops
+
+    networks:
+      global-network:
 
 
   frontend-blue:
     image: ${FRONTEND_IMAGE}
-#    build:
-#      context: ./community-frontend
-#    ports:
-#      - "3000:80"
-    depends_on:
-      - backend-blue
+    networks:
+      global-network:
+
 
 
 #====================================================================================
@@ -51,8 +37,6 @@ services:
 
   backend-green:
     image: ${BACKEND_IMAGE}
-#    build:
-#      context: ./community-backend
 
 
     # 존재하지 않는 프로필 만들어서 무한대기
@@ -62,26 +46,27 @@ services:
     env_file:
       - .env
     environment:
-      #.env 파일에 정의된 변수를 Spring의 DB 연결 설정에 매핑
-      # 환경변수로 spring_datasource_* 이런식으로 입력되면 스프링이 알아서 속성파일에 적용할 수 있는 속성으로 변환.
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/${DB_NAME}
       SPRING_DATASOURCE_USERNAME: ${DB_USER}       # Spring에 유저명 전달
       SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}   # Spring에 비밀번호 전달
-
-    depends_on:
-      db:
-        condition: service_healthy
 
     volumes:
       - ./ops:/app/ops
 
 
+    networks:
+      global-network:
+
+
   frontend-green:
     image: ${FRONTEND_IMAGE}
-#    build:
-#      context: ./community-frontend
     profiles: ["standBy"] # 배포 스크립트 실행 전까지 가동 대기
-    depends_on:
-      - backend-green
+    networks:
+      global-network:
 
 
+# 도커내의 글로벌 네트워크에 연결
+# 인프라 compose와 통신
+networks:
+  global-network:
+    external: true

@@ -1,7 +1,5 @@
 
-# TODO: 이 컴포즈 실행하기 전에 프론트/백엔드 서버 컴포즈랑 통신할 Network를 먼저 만들어야함
-# TODO: 로그파일 마운트 수정.
-
+# TODO: 로그파일 마운트 수정, global-network 이미 만들어둠.
 
 services:
 
@@ -9,6 +7,7 @@ services:
   db:
     image: mysql:8.0
     restart: always
+
     env_file:
       - .env
     environment:
@@ -27,6 +26,9 @@ services:
     volumes:
       - db_data:/var/lib/mysql # 컨테이너가 삭제되어도 데이터가 유지되도록 볼륨 설정
 
+    networks:
+      global-network:
+
 
 
   # 무중단 배포를 위한 로드밸런서로 nginx 사용.
@@ -37,6 +39,9 @@ services:
       - "80:80"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    networks:
+      global-network:
+
 
 
   # 모니터링을 위한 Uptime-Kuma 사용
@@ -48,7 +53,6 @@ services:
     volumes:
       - uptime-kuma-data:/app/data
     restart: unless-stopped
-
 
 
   # 로그 시작화 대시보드
@@ -94,3 +98,8 @@ volumes:
   uptime-kuma-data:
   grafana-data:
   loki-data:
+
+
+networks:
+  global-network:
+    external: true
