@@ -2,7 +2,7 @@
 
 set -e
 
-BASE_DIR="/mnt/c/DH_cloud_backend/SW-project/SW-project-deploy"
+BASE_DIR="/opt/deploy-repo/community-deploy"
 REQUEST_FILE="$BASE_DIR/ops/deploy-request.txt"
 DEPLOY_SCRIPT="$BASE_DIR/scripts/deploy.sh"
 LOG_FILE="$BASE_DIR/ops/watch-deploy.log"
