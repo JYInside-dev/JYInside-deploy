@@ -9,7 +9,7 @@ services:
     restart: on-failure
 
     env_file:
-      - .env
+      - ../.env
     environment:
       #.env 파일에 정의된 변수를 Spring의 DB 연결 설정에 매핑
       # 환경변수로 spring_datasource_* 이런식으로 입력되면 스프링이 알아서 속성파일에 적용할 수 있는 속성으로 변환.
@@ -18,18 +18,17 @@ services:
       SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}   # Spring에 비밀번호 전달
       SPRING_PROFILES_ACTIVE: prod # 도커로 실행할 때에는 로그파일 작성
 
-
     volumes:
-      - ./ops:/app/ops
+      - ../ops:/app/ops
 
     networks:
-      global-network:
+      test-global-network:
 
 
   frontend-blue:
     image: ${FRONTEND_IMAGE}
     networks:
-      global-network:
+      test-global-network:
 
 
 
@@ -55,22 +54,22 @@ services:
 
 
     volumes:
-      - ./ops:/app/ops
+      - ../ops:/app/ops
 
 
     networks:
-      global-network:
+      test-global-network:
 
 
   frontend-green:
     image: ${FRONTEND_IMAGE}
     profiles: ["standBy"] # 배포 스크립트 실행 전까지 가동 대기
     networks:
-      global-network:
+      test-global-network:
 
 
 # 도커내의 글로벌 네트워크에 연결
 # 인프라 compose와 통신
 networks:
-  global-network:
+  test-global-network:
     external: true
