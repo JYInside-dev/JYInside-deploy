@@ -57,10 +57,17 @@ services:
   # 로그 시작화 대시보드
   grafana:
     image: grafana/grafana:main-ubuntu
-    ports:
-      - "3000:3000"
     volumes:
       - grafana-data:/var/lib/grafana
+
+    networks:
+      - global-network
+    environment:
+      # Grafana에게 자신이 /grafana 경로 아래에서 서비스되고 있음을 명시적으로 알림
+      - GF_SERVER_ROOT_URL=http://localhost/grafana/
+      - GF_SERVER_SERVE_FROM_SUB_PATH=true
+
+
 
   # 로그 DB
   loki:
