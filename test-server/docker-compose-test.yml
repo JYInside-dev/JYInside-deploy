@@ -9,7 +9,7 @@ services:
     restart: on-failure
 
     env_file:
-      - ../.env
+      - ./.env
     environment:
       #.env 파일에 정의된 변수를 Spring의 DB 연결 설정에 매핑
       # 환경변수로 spring_datasource_* 이런식으로 입력되면 스프링이 알아서 속성파일에 적용할 수 있는 속성으로 변환.
@@ -19,7 +19,8 @@ services:
       SPRING_PROFILES_ACTIVE: prod # 도커로 실행할 때에는 로그파일 작성
 
     volumes:
-      - ../ops:/app/ops
+      - ./ops:/app/ops
+      - ./logs:/var/log/community
 
     networks:
       test-global-network:
@@ -54,7 +55,8 @@ services:
 
 
     volumes:
-      - ../ops:/app/ops
+      - ./ops:/app/ops
+      - ./logs:/var/log/community
 
 
     networks:

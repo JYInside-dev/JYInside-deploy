@@ -6,7 +6,7 @@ services:
     restart: always
 
     env_file:
-      - ../.env
+      - ./.env
 
     environment:
       MYSQL_DATABASE: ${DB_NAME}
@@ -72,6 +72,8 @@ services:
     ports:
       - "4100:3100"
     command: -config.file=/etc/loki/local-config.yaml
+    networks:
+      test-global-network:
     volumes:
       - loki-test-data:/loki
 
@@ -81,9 +83,12 @@ services:
     image: grafana/alloy
     ports:
       - "13345:12345"
+    networks:
+      test-global-network:
+
     volumes:
       # 호스트의 로그 폴더를 컨테이너 내부에 마운트 (읽기 전용)
-      - ../logs:/var/log:ro
+      - ./logs:/var/log:ro
       # Alloy 설정 파일 마운트
       - ../config.alloy:/etc/alloy/config.alloy:ro
     command:
