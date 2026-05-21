@@ -1,0 +1,37 @@
+services:
+#====================================================================================
+  # Test 서버
+#====================================================================================
+
+  backend-test:
+    image: ${BACKEND_IMAGE}
+
+    restart: on-failure
+
+    env_file:
+      - .env
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/${DB_NAME}
+      SPRING_DATASOURCE_USERNAME: ${DB_USER}       # Spring에 유저명 전달
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}   # Spring에 비밀번호 전달
+      SPRING_PROFILES_ACTIVE: prod # 도커로 실행할 때에는 로그파일 작성
+
+
+    volumes:
+      - ./ops:/app/ops
+      - ./logs:/var/log/community
+
+
+    networks:
+      - test-global-network
+
+  frontend-test:
+    image: ${FRONTEND_IMAGE}
+    networks:
+      - test-global-network
+
+# 도커내의 글로벌 네트워크에 연결
+# 인프라 compose와 통신
+networks:
+  test-global-network:
+    external: true
