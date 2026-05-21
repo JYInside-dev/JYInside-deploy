@@ -1,9 +1,8 @@
 services:
 
   #====================================================================================
-  # green 서버
+  # Test 서버
   #====================================================================================
-
 
   # 데이터베이스 컨테이너
   db:
@@ -27,10 +26,10 @@ services:
       start_period: 30s
 
     volumes:
-      - db-green-data:/var/lib/mysql # 컨테이너가 삭제되어도 데이터가 유지되도록 볼륨 설정
+      - db-test-data:/var/lib/mysql  # 컨테이너가 삭제되어도 데이터가 유지되도록 볼륨 설정
 
     networks:
-      - green-global-network
+      - test-global-network
 
 
 
@@ -42,7 +41,7 @@ services:
     volumes:
       - ../nginx/nginx.conf:/etc/nginx/nginx.conf
     networks:
-      - green-global-network
+      - test-global-network
 
 
 
@@ -52,19 +51,19 @@ services:
     ports:
       - "4001:3001"
     volumes:
-      - uptime-kuma-green-data:/app/data
+      - uptime-kuma-test-data:/app/data
     restart: unless-stopped
     networks:
-      - green-global-network
+      - test-global-network
 
 
   # 로그 시작화 대시보드
   grafana:
     image: grafana/grafana:main-ubuntu
     volumes:
-      - grafana-green-data:/var/lib/grafana
+      - grafana-test-data:/var/lib/grafana
     networks:
-      - green-global-network
+      - test-global-network
     environment:
       # Grafana에게 자신이 /grafana 경로 아래에서 서비스되고 있음을 명시적으로 알림
       - GF_SERVER_ROOT_URL=http://localhost:8000/grafana/
@@ -79,9 +78,9 @@ services:
       - "4100:3100"
     command: -config.file=/etc/loki/local-config.yaml
     networks:
-      - green-global-network
+      - test-global-network
     volumes:
-      - loki-green-data:/loki
+      - loki-test-data:/loki
 
 
   # 로그 수집기
@@ -90,7 +89,7 @@ services:
     ports:
       - "13345:12345"
     networks:
-      - green-global-network
+      - test-global-network
 
     volumes:
       # 호스트의 로그 폴더를 컨테이너 내부에 마운트 (읽기 전용)
@@ -108,12 +107,12 @@ services:
 
 # 볼륨
 volumes:
-  db-green-data:
-  uptime-kuma-green-data:
-  grafana-green-data:
-  loki-green-data:
+  db-test-data:
+  uptime-kuma-test-data:
+  grafana-test-data:
+  loki-test-data:
 
 
 networks:
-  green-global-network:
+  test-global-network:
     external: true
