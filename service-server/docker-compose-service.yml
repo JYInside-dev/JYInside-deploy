@@ -7,6 +7,7 @@ services:
   backend-blue:
     image: ${BACKEND_IMAGE}
     restart: on-failure
+    profiles: [ "standBy" ] # 배포 스크립트 실행 전까지 가동 대기
 
     env_file:
       - ./.env
@@ -29,6 +30,8 @@ services:
 
   frontend-blue:
     image: ${FRONTEND_IMAGE}
+    profiles: [ "standBy" ] # 배포 스크립트 실행 전까지 가동 대기
+
     networks:
       - service-global-network
 

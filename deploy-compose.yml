@@ -47,6 +47,6 @@ deploy_compose:
     - sed -i "s|^BACKEND_IMAGE=.*|BACKEND_IMAGE=$BACKEND_IMAGE|" .env
     - sed -i "s|^FRONTEND_IMAGE=.*|FRONTEND_IMAGE=$FRONTEND_IMAGE|" .env
     - echo "$REGISTRY_PASSWORD" | docker login registry.gitlab.com -u "$REGISTRY_USER" --password-stdin
-    - sh ../scripts/deploy-test.sh
+    - sh ../scripts/deploy.sh "test"  #테스트 서버 스크립트로 실행
   rules:
     - if: '$CI_COMMIT_BRANCH'
