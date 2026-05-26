@@ -19,6 +19,10 @@ DIR_PATH="/opt/deploy-repo/community-deploy/${TARGET}-server"
 if [ "$TARGET" = "test" ]; then
     echo ">>> ${TARGET}서버 가동 시작합니다."
     docker compose -f "${DIR_PATH}/docker-compose-${TARGET}-infra.yml" up -d || { echo "❌ 인프라 도커 실행 실패!"; exit 1; }
+
+    # 테스트서버는 항상 최신 이미지 pull 해서 사용
+    docker compose -f "${DIR_PATH}/docker-compose-${TARGET}.yml" pull backend-test frontend-test
+
     docker compose -f "${DIR_PATH}/docker-compose-${TARGET}.yml" up -d || { echo "❌ 서버 도커 실행 실패!"; exit 1; }
 
     echo "Test 서버 실행 완료!"
@@ -42,6 +46,9 @@ echo ">>> 2. ${LAST_TARGET}서버 컨테이너 가동"
 docker compose -f "${DIR_PATH}/docker-compose-${TARGET}.yml" up -d backend-${LAST_TARGET} frontend-${LAST_TARGET}
 
 echo ">>> ${LAST_TARGET}서버 실행 완료! "
+
+# 가비지 컨테이너들 회수
+docker image prune -f
 
 
 
