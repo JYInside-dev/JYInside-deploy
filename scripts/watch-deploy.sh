@@ -4,6 +4,7 @@ set -e
 
 BASE_DIR="/opt/deploy-repo/community-deploy"
 OPS_DIR="$BASE_DIR/service-server/ops"
+STATUS_FILE="$OPS_DIR/deploy-status.txt"
 REQUEST_FILE="$OPS_DIR/deploy-request.txt"
 DEPLOY_SCRIPT="$BASE_DIR/scripts/switching.sh"
 LOG_FILE="$OPS_DIR/watch-deploy.log"
@@ -14,11 +15,22 @@ touch "$LOG_FILE"
 
 # 감시 시작 로그 남기기
 log() {
-  echo "$(date '+%F %T') $1" >> "$LOG_FILE"
+  echo "$(date '+%F %T') $*" >> "$LOG_FILE"
 }
+
+write_status() {
+  echo "$*" > "$STATUS_FILE"
+  log "status updated: $*"
+}
+
+# 상태 파일이 아예 없을 때만 초기 상태 생성
+if [ ! -f "$STATUS_FILE" ]; then
+  write_status "IDLE time=$(date '+%F %T')"
+fi
 
 log "watch-deploy started"
 log "BASE_DIR=$BASE_DIR"
+log "STATUS_FILE=$STATUS_FILE"
 log "REQUEST_FILE=$REQUEST_FILE"
 log "DEPLOY_SCRIPT=$DEPLOY_SCRIPT"
 log "LOG_FILE=$LOG_FILE"
@@ -40,6 +52,8 @@ while true; do
       log "request file content:"
       cat "$REQUEST_FILE" >> "$LOG_FILE" 2>&1
 
+      write_status "FAILED reason=invalid-target target=$TARGET time=$(date '+%F %T')"
+
       rm -f "$REQUEST_FILE"
       log "invalid request file removed"
 
@@ -57,17 +71,27 @@ while true; do
 
     if [ ! -f "$DEPLOY_SCRIPT" ]; then
       log "deploy script not found: $DEPLOY_SCRIPT"
+
+      write_status "FAILED reason=script-not-found target=$TARGET time=$(date '+%F %T')"
+
       sleep 2
       continue
     fi
+
+    write_status "RUNNING target=$TARGET started=$(date '+%F %T')"
 
     log "running switching script: bash $DEPLOY_SCRIPT $TARGET"
 
     # 실제 배포 스크립트 실행 (성공, 실패 로그 전부 기록)
     if bash "$DEPLOY_SCRIPT" "$TARGET" >> "$LOG_FILE" 2>&1; then
       log "deploy success. target=$TARGET"
+
+      write_status "SUCCESS target=$TARGET finished=$(date '+%F %T')"
     else
-      log "deploy failed. target=$TARGET"
+      EXIT_CODE=$?
+      log "deploy failed. target=$TARGET exitCode=$EXIT_CODE"
+
+      write_status "FAILED target=$TARGET exitCode=$EXIT_CODE finished=$(date '+%F %T')"
     fi
   fi
 
