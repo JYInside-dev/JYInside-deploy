@@ -5,3 +5,5 @@ community-frontend
 .env.runtime
 ops/*
 logs
+service-server/ops
+test-server/ops
