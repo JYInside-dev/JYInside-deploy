@@ -83,7 +83,7 @@ services:
       - loki-test-data:/loki
 
 
-  # 로그 수집기
+  # 서버 상태 확인을 위한 로그 수집기
   alloy:
     image: grafana/alloy
     ports:
@@ -105,12 +105,71 @@ services:
       - loki
 
 
+
+  # 서비스 로직을 위한 로그 수집기
+  fluentd:
+    build:
+      context: ./fluentd      # Dockerfile이 있는 폴더 경로
+      dockerfile: Dockerfile
+    volumes:
+      - ./logs:/var/log/community:ro
+      - ./fluentd/fluent.conf:/fluentd/etc/fluent.conf:ro
+    user: root # 볼륨으로 마운트된 호스트의 로그 파일을 읽기 위해 root 권한 사용
+    networks:
+      - test-global-network
+
+
+
+  kafka:
+    image: apache/kafka:4.2.1
+    ports:
+      - "9092:9092"
+    networks:
+      - test-global-network
+    volumes:
+      - ./kafka-data:/tmp/kafka-logs
+
+      # 클라우드에서는 따로 로컬 디렉토리 안만듥도 도커볼륨생성해서 사용
+      # - kafka-test-data:/tmp/kafka-logs
+    environment:
+      # Bitnami의 KAFKA_CFG_ 접두사가 사라지고 아파치 표준 환경변수를 사용합니다.
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      # KRaft 모드에서는 클러스터 ID가 필수입니다. (임의의 식별자)
+      KAFKA_CLUSTER_ID: "community-realtime-cluster"
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+
+
+  redis:
+    image: redis:8.8-alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - test-global-network
+    volumes:
+      - redis-test-data:/data
+      # 서버가 꺼져도 디스크에 데이터를 기록하여 날아가지 않게 하는 옵션
+    command: redis-server --appendonly yes
+
+
+
+
+
 # 볼륨
 volumes:
   db-test-data:
   uptime-kuma-test-data:
   grafana-test-data:
   loki-test-data:
+  kafka-test-data:
+  redis-test-data:
 
 
 networks:
