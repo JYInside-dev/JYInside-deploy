@@ -30,6 +30,7 @@ if [ "$TARGET" = "test" ]; then
 fi
 
 
+
 # 서비스 서버 분기
 # nginx 설정파일에서 마지막으로 서비스됐던 서버가 블루인지 그린인지 판별
 NGINX_CONF="${DIR_PATH}/nginx/nginx.conf"

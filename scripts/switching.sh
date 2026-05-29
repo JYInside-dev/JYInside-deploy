@@ -51,6 +51,7 @@ docker compose -f "${DIR_PATH}/docker-compose-service.yml" up -d backend-${TARGE
 #done
 
 # Nginx.conf 파일 포트포워딩 설정 치환
+
 echo ">>> 3. Nginx 라우팅 타겟 변경 (${CURRENT} ➔ ${TARGET})"
 # nginx.conf 파일 내부의 글자를 찾아서 바꿉니다.
 sed -i "s/backend-${CURRENT}/backend-${TARGET}/g" $NGINX_CONF_PATH  || { echo "nginx 라우팅 타겟 변경중 오류 발생 "; exit 1; }
