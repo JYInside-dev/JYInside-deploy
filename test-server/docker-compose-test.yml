@@ -4,8 +4,10 @@ services:
 #====================================================================================
 
   backend-test:
-    image: ${BACKEND_IMAGE}
-
+    #image: ${BACKEND_IMAGE}
+    build:
+      context: ../community-backend # Dockerfile이 있는 폴더 경로
+      dockerfile: Dockerfile
     restart: on-failure
 
     env_file:
@@ -23,7 +25,8 @@ services:
 
     volumes:
       - ./ops:/app/ops
-      - ./logs:/var/log/community
+      #- ./logs:/var/log/community
+      - test-shared-logs:/var/log/community
 
 
     networks:
@@ -34,8 +37,16 @@ services:
     networks:
       - test-global-network
 
+
+volumes:
+  test-shared-logs:
+    external: true
+    name: community-shared-logs
+
+
 # 도커내의 글로벌 네트워크에 연결
 # 인프라 compose와 통신
 networks:
   test-global-network:
     external: true
+
