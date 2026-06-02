@@ -126,6 +126,19 @@ services:
     networks:
       - test-global-network
 
+  # 도커볼륨 권한 설정을 위한 kafka 설정 컨테이너
+
+  kafka-init:
+    image: apache/kafka:4.2.1
+    user: root
+
+    # 카프카 볼륨의 소유권을 UID 1000(appuser)으로 변경하고 즉시 종료됩니다.
+    command: chown -R 1000:1000 /tmp/kafka-logs
+    networks:
+      - test-global-network
+    volumes:
+      - kafka-test-data:/tmp/kafka-logs
+
 
 
   kafka:
