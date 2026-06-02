@@ -36,6 +36,7 @@ services:
   # 무중단 배포를 위한 로드밸런서로 nginx 사용.
   nginx:
     image: nginx:stable-alpine
+    restart: always
     ports:
       - "8000:80"
     volumes:
@@ -127,7 +128,6 @@ services:
       - test-global-network
 
   # 도커볼륨 권한 설정을 위한 kafka 설정 컨테이너
-
   kafka-init:
     image: apache/kafka:4.2.1
     user: root
@@ -143,6 +143,7 @@ services:
 
   kafka:
     image: apache/kafka:4.2.1
+    restart: always
     ports:
       - "9092:9092"
     networks:
