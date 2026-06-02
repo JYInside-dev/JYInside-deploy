@@ -135,9 +135,9 @@ services:
     networks:
       - test-global-network
     volumes:
-      - ./kafka-data:/tmp/kafka-logs
+      #- ./kafka-data:/tmp/kafka-logs
       # 클라우드에서는 따로 로컬 디렉토리 안만듥도 도커볼륨생성해서 사용
-      # - kafka-test-data:/tmp/kafka-logs
+      - kafka-test-data:/tmp/kafka-logs
 
 
 

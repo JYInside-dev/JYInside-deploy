@@ -6,4 +6,7 @@ community-frontend
 ops/*
 logs
 service-server/ops
+
 test-server/ops
+
+test-server/kafka-data
