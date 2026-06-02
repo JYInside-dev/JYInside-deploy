@@ -4,8 +4,10 @@ services:
 #====================================================================================
 
   backend-test:
-    image: ${BACKEND_IMAGE}
-
+    #image: ${BACKEND_IMAGE}
+    build:
+      context: ../community-backend # Dockerfile이 있는 폴더 경로
+      dockerfile: Dockerfile
     restart: on-failure
 
     env_file:
@@ -20,22 +22,39 @@ services:
       OPS_FRONTEND_HEALTH_URL: ${OPS_FRONTEND_HEALTH_URL}
       OPS_NGINX_HEALTH_URL: ${OPS_NGINX_HEALTH_URL}
 
+      # 💡 Redis 접속 주소를 localhost가 아닌 도커 서비스명 redis 으로 덮어쓰기
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
+
 
     volumes:
       - ./ops:/app/ops
-      - ./logs:/var/log/community
+      #- ./logs:/var/log/community
+      - test-shared-logs:/var/log/community
 
 
     networks:
       - test-global-network
 
   frontend-test:
-    image: ${FRONTEND_IMAGE}
+    #image: ${FRONTEND_IMAGE}
+    build:
+      context: ../community-frontend # Dockerfile이 있는 폴더 경로
+      dockerfile: Dockerfile
+
     networks:
       - test-global-network
+
+
+volumes:
+  test-shared-logs:
+    external: true
+    name: community-shared-logs
+
 
 # 도커내의 글로벌 네트워크에 연결
 # 인프라 compose와 통신
 networks:
   test-global-network:
     external: true
+
