@@ -15,8 +15,8 @@ fi
 
 # 테스트 서버의 경우: 인프라, 서비스 전부 down
 if [ "${TARGET}" = "test" ]; then
-    DIR_PATH="/mnt/c/Users/najy1/cicd-project/test-server"
-    #DIR_PATH="/opt/deploy-repo/community-deploy/test-server"
+    #DIR_PATH="/mnt/c/Users/najy1/cicd-project/test-server"
+    DIR_PATH="/opt/deploy-repo/community-deploy/test-server"
     echo ">>> [test] 서버 및 인프라 중지를 시작합니다."
 
     docker compose -f "${DIR_PATH}/docker-compose-test.yml" down || { echo "❌ 테스트 서버 중지 실패!"; exit 1; }
