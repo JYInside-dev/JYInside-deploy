@@ -26,10 +26,10 @@ services:
       OPS_NGINX_HEALTH_URL: ${OPS_NGINX_HEALTH_URL}
 
 
+
     volumes:
       - ./ops:/app/ops
-      - ./logs:/var/log/community
-
+      - shared-logs:/var/log/community
     networks:
       - service-global-network
 
@@ -71,7 +71,7 @@ services:
 
     volumes:
       - ./ops:/app/ops
-      - ./logs:/var/log/community
+      - shared-logs:/var/log/community
 
     networks:
       - service-global-network

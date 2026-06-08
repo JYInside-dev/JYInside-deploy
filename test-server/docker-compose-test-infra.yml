@@ -145,7 +145,7 @@ services:
     image: apache/kafka:4.2.1
     restart: always
     ports:
-      - "9092:9092"
+      - "10092:9092"
     networks:
       - test-global-network
     volumes:
@@ -180,7 +180,7 @@ services:
   redis:
     image: redis:8.8-alpine
     ports:
-      - "6379:6379"
+      - "16379:6379"
     networks:
       - test-global-network
     volumes:

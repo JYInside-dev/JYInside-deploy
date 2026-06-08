@@ -5,8 +5,7 @@ build_backend:
   stage: build
   image: docker:24.0.5-cli
   services:
-    - name: docker:24.0.5-dind
-      command: ["--mtu=1400"]
+    command: ["--mtu=1400"]
   variables:
     DOCKER_HOST: tcp://docker:2375
     DOCKER_TLS_CERTDIR: ""
@@ -17,3 +16,4 @@ build_backend:
     - echo "$CI_REGISTRY_PASSWORD" | docker login "$CI_REGISTRY" -u "$CI_REGISTRY_USER" --password-stdin
     - docker build --pull -t "$IMAGE_TAG" .
     - docker push "$IMAGE_TAG"
+    - name: docker:24.0.5-dind
