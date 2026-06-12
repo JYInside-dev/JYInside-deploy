@@ -11,9 +11,8 @@ if [ "$TARGET" != "service" ] && [ "$TARGET" != "test" ]; then
 fi
 
 
-DIR_PATH="/opt/deploy-repo/community-deploy/${TARGET}-server"
-
-#DIR_PATH="/mnt/c/Users/najy1/cicd-project/${TARGET}-server"
+#DIR_PATH="/opt/deploy-repo/community-deploy/${TARGET}-server"
+DIR_PATH="/mnt/c/Users/najy1/cicd-project/${TARGET}-server"
 
 
 # 테스트 서버 분기
