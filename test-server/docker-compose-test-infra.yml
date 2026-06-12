@@ -201,7 +201,7 @@ volumes:
   kafka-test-data:
   redis-test-data:
   test-shared-logs:
-    name: community-shared-logs
+    name: test-community-shared-logs
 
 
 networks:

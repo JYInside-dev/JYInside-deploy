@@ -91,6 +91,12 @@ services:
     networks:
       - service-global-network
 
+volumes:
+  shared-logs:
+    external: true
+    name: community-shared-logs
+
+
 
 # 도커내의 글로벌 네트워크에 연결
 # 인프라 compose와 통신
