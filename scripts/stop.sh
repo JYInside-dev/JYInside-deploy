@@ -29,8 +29,8 @@ fi
 
 
 # 실제 서비스 서버 분기점
-DIR_PATH="/opt/deploy-repo/community-deploy/service-server"
-#DIR_PATH="/mnt/c/Users/najy1/cicd-project/service-server"
+#DIR_PATH="/opt/deploy-repo/community-deploy/service-server"
+DIR_PATH="/mnt/c/Users/najy1/cicd-project/service-server"
 
 
 
