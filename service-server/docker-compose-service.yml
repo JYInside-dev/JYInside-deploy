@@ -25,6 +25,10 @@ services:
       OPS_FRONTEND_GREEN_HEALTH_URL: ${OPS_FRONTEND_GREEN_HEALTH_URL}
       OPS_NGINX_HEALTH_URL: ${OPS_NGINX_HEALTH_URL}
 
+      # 💡 Redis 접속 주소를 localhost가 아닌 도커 서비스명 redis 으로 덮어쓰기
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
+
 
 
     volumes:
@@ -67,6 +71,10 @@ services:
       OPS_FRONTEND_BLUE_HEALTH_URL: ${OPS_FRONTEND_BLUE_HEALTH_URL}
       OPS_FRONTEND_GREEN_HEALTH_URL: ${OPS_FRONTEND_GREEN_HEALTH_URL}
       OPS_NGINX_HEALTH_URL: ${OPS_NGINX_HEALTH_URL}
+
+      # 💡 Redis 접속 주소를 localhost가 아닌 도커 서비스명 redis 으로 덮어쓰기
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
 
 
     volumes:
