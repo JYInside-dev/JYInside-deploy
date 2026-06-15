@@ -18,7 +18,7 @@ services:
       MYSQL_USER: ${DB_USER}             # MySQL이 시작될 때 이 유저를 생성
       MYSQL_PASSWORD: ${DB_PASSWORD}     # 생성된 유저의 비밀번호 설정
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
-
+      command: --default-time-zone='+09:00' # 💡 추가: MySQL 서버 시간을 KST로 강제
     healthcheck: # DB가 정말로 준비되었는지 확인하는 로직
       test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD}" ]
       interval: 5s
