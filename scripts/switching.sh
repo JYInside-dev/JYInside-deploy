@@ -36,7 +36,7 @@ CONTAINER_NAME="service-server-backend-${TARGET}-1"
 
 for i in {1..30} ; do
     # 정확한 컨테이너 명칭으로 내부 접속하여 API 호출
-    RESPONSE=$(docker exec $CONTAINER_NAME curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/api/health || echo "000")
+    RESPONSE=$(docker exec $CONTAINER_NAME curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/api/community/health || echo "000")
 
     # (Dockerfile에 curl을 설치하지 않았다면 아래 wget 명령어로 대체)
     # RESPONSE=$(docker exec $CONTAINER_NAME wget -S -qO- http://localhost:8080/api/health 2>&1 | grep "HTTP/" | awk '{print $2}' || echo "000")
