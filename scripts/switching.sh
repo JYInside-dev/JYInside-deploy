@@ -29,26 +29,25 @@ echo ">>> 1. ${TARGET} 백엔드/프론트엔드 컨테이너 가동"
 docker compose -f "${DIR_PATH}/docker-compose-service.yml" up -d backend-${TARGET} frontend-${TARGET} || { echo "${TARGET}서버 컨테이너 기동 중 오류발생"; exit 1; }
 
 
-#echo ">>> 2. ${TARGET} 백엔드 서버 부팅 확인 중"
-#for i in {1..15} ; do
-#  # TODO: health체크하는 API 만들기
-#    RESPONSE=$(docker exec backend-${TARGET} curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/api/health || echo "000")
-#
-#    if [ "$RESPONSE" -eq 200 ]; then
-#        echo "백엔드 서버 부팅 완료! (응답코드: 200)"
-#        break
-#    fi
-#
-#    if [ "$i" -eq 15 ]; then
-#        echo "45초 초과: 백엔드 서버가 켜지지 않았습니다. 배포를 중단합니다."
-#        # 배포 실패 시 켜려던 타겟 컨테이너를 다시 내림 (롤백)
-#        docker compose -f "${DIR_PATH}/docker-compose-service.yml" stop backend-${TARGET} frontend-${TARGET}
-#        exit 1
-#    fi
-#
-#    echo "대기 중... ($i/15)"
-#    sleep 3
-#done
+echo ">>> 2. ${TARGET} 백엔드 서버 부팅 확인 중"
+for i in {1..30} ; do
+    RESPONSE=$(docker exec backend-${TARGET} curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/api/health || echo "000")
+
+    if [ "$RESPONSE" -eq 200 ]; then
+        echo "백엔드 서버 부팅 완료! (응답코드: 200)"
+        break
+    fi
+
+    if [ "$i" -eq 30 ]; then
+        echo "45초 초과: 백엔드 서버가 켜지지 않았습니다. 배포를 중단합니다."
+        # 배포 실패 시 켜려던 타겟 컨테이너를 다시 내림 (롤백)
+        docker compose -f "${DIR_PATH}/docker-compose-service.yml" stop backend-${TARGET} frontend-${TARGET}
+        exit 1
+    fi
+
+    echo "대기 중... ($i/30)"
+    sleep 3
+done
 
 # Nginx.conf 파일 포트포워딩 설정 치환
 
