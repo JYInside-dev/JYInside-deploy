@@ -31,8 +31,9 @@ docker compose -f "${DIR_PATH}/docker-compose-service.yml" up -d backend-${TARGE
 
 echo ">>> 2. ${TARGET} 백엔드 서버 부팅 확인 중"
 for i in {1..30} ; do
-    RESPONSE=$(docker exec backend-${TARGET} curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/api/health || echo "000")
+#    RESPONSE=$(docker exec backend-${TARGET} curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/api/health || echo "000")
 
+    RESPONSE=$(docker exec backend-${TARGET} wget -S -qO- http://localhost:8080/api/health 2>&1 | grep "HTTP/" | awk '{print $2}')
     if [ "$RESPONSE" -eq 200 ]; then
         echo "백엔드 서버 부팅 완료! (응답코드: 200)"
         break
