@@ -4,10 +4,10 @@ services:
 #====================================================================================
 
   backend-test:
-    image: ${BACKEND_IMAGE}
-#    build:
-#      context: ../community-backend # Dockerfile이 있는 폴더 경로
-#      dockerfile: Dockerfile
+#    image: ${BACKEND_IMAGE}
+    build:
+      context: ../backend # Dockerfile이 있는 폴더 경로
+      dockerfile: Dockerfile
     restart: on-failure
 
     env_file:
@@ -41,10 +41,10 @@ services:
       - test-global-network
 
   frontend-test:
-    image: ${FRONTEND_IMAGE}
-#    build:
-#      context: ../community-frontend # Dockerfile이 있는 폴더 경로
-#      dockerfile: Dockerfile
+#    image: ${FRONTEND_IMAGE}
+    build:
+      context: ../frontend # Dockerfile이 있는 폴더 경로
+      dockerfile: Dockerfile
 
     networks:
       - test-global-network
