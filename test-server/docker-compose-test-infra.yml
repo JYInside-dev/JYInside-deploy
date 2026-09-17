@@ -50,17 +50,17 @@ services:
         hard: 65535
 
 
-
-  # 모니터링을 위한 Uptime-Kuma 사용
-  uptime-kuma:
-    image: louislam/uptime-kuma:2
-    ports:
-      - "4001:3001"
-    volumes:
-      - uptime-kuma-test-data:/app/data
-    restart: unless-stopped
-    networks:
-      - test-global-network
+#
+#  # 모니터링을 위한 Uptime-Kuma 사용
+#  uptime-kuma:
+#    image: louislam/uptime-kuma:2
+#    ports:
+#      - "4001:3001"
+#    volumes:
+#      - uptime-kuma-test-data:/app/data
+#    restart: unless-stopped
+#    networks:
+#      - test-global-network
 
 
   # 로그 시작화 대시보드
@@ -189,7 +189,24 @@ services:
     command: redis-server --appendonly yes
 
 
-
+  # 부하테스트 툴 k6
+  k6:
+    image: grafana/k6:latest
+    profiles:
+      - test
+    networks:
+      - test-global-network
+    volumes:
+      - ./k6/scripts:/scripts
+      - ./k6/results:/results
+    environment:
+      BASE_URL: http://nginx:80
+    command:
+      - run
+      - --summary-trend-stats=avg,min,med,p(90),p(95),p(99),max
+      - --out
+      - json=/results/result.json
+      - /scripts/load-test.js
 
 
 # 볼륨

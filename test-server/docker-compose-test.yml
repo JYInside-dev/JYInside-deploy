@@ -6,7 +6,7 @@ services:
   backend-test:
 #    image: ${BACKEND_IMAGE}
     build:
-      context: ../backend # Dockerfile이 있는 폴더 경로
+      context: ../community-backend # Dockerfile이 있는 폴더 경로
       dockerfile: Dockerfile
     restart: on-failure
 
@@ -43,7 +43,7 @@ services:
   frontend-test:
 #    image: ${FRONTEND_IMAGE}
     build:
-      context: ../frontend # Dockerfile이 있는 폴더 경로
+      context: ../community-frontend # Dockerfile이 있는 폴더 경로
       dockerfile: Dockerfile
 
     networks:
